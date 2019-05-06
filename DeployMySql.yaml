@@ -24,3 +24,14 @@ spec:
             cpu: 250m
           limits:
             cpu: 500m
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: pruebaMySql
+spec:
+  type: LoadBalancer
+  ports:
+  - port: 80
+  selector:
+    k8s-app: pruebaMySql
