@@ -1,37 +1,43 @@
-apiVersion: apps/v1beta1
+apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  name: pruebaMySql
+  labels:
+    app: myadmin
+  name: myadmin
+  namespace: aksbabel
 spec:
-  replicas: 2
-  strategy:
-    rollingUpdate:
-      maxSurge: 25%
-      maxUnavailable: 25%
-  minReadySeconds: 5 
+  replicas: 1
   template:
     metadata:
       labels:
-        k8s-app: pruebaMySql
+        app: myadmin
     spec:
       containers:
-      - name: pruebaMySql
-        image: phpmyadmin/phpmydamin
+      - image: phpmyadmin/phpmyadmin
+        imagePullPolicy: Always
+        name: phpmyadmin
         ports:
         - containerPort: 80
-        resources:
-          requests:
-            cpu: 250m
-          limits:
-            cpu: 500m
+          name: http
+          protocol: TCP
+        env:
+          - name: PMA_ARBITRARY
+            value: '1'
+
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: pruebaMySql
+  labels:
+    app: myadmin
+  name: myadmin
+  namespace: aksbabel
 spec:
-  type: LoadBalancer
   ports:
-  - port: 80
+  - name: http
+    port: 80
+    protocol: TCP
+    targetPort: http
   selector:
-    k8s-app: pruebaMySql
+    app: myadmin
+  type: LoadBalancer
