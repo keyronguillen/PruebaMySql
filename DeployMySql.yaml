@@ -1,7 +1,7 @@
 apiVersion: apps/v1beta1
 kind: Deployment
 metadata:
-  name: pruebasite
+  name: pruebaMySql
 spec:
   replicas: 2
   strategy:
@@ -12,11 +12,11 @@ spec:
   template:
     metadata:
       labels:
-        k8s-app: pruebasite
+        k8s-app: pruebaMySql
     spec:
       containers:
-      - name: pruebasite
-        image: acrkeyronbabel.azurecr.io/pruebasite:$(Build.BuildNumber)
+      - name: pruebaMySql
+        image: phpmyadmin/phpmydamin
         ports:
         - containerPort: 80
         resources:
