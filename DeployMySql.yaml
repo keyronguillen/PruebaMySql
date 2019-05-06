@@ -1,25 +1,26 @@
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1beta1
 kind: Deployment
 metadata:
-  labels:
-    app: myadmin
-  name: pruebamysql
-  namespace: aksbabel
+  name: pruebasite
 spec:
   replicas: 2
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+  minReadySeconds: 5 
   template:
     metadata:
       labels:
-        app: myadmin
+        k8s-app: pruebasite
     spec:
       containers:
-      - image: phpmyadmin/phpmyadmin
-        imagePullPolicy: Always
-        name: pruebamysql
+      - name: pruebasite
+        image: acrkeyronbabel.azurecr.io/pruebasite:$(Build.BuildNumber)
         ports:
         - containerPort: 80
-          name: http
-          protocol: TCP
-        env:
-          - name: PMA_ARBITRARY
-            value: '1'
+        resources:
+          requests:
+            cpu: 250m
+          limits:
+            cpu: 500m
